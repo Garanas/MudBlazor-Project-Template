@@ -3,14 +3,16 @@ name: GitHub Pages - Deploy
 env:
   SOURCE_DIR: MudBlazorProject.Client
   PUBLISH_DIR: MudBlazorProject.Client/release/wwwroot
-  BASE_URL: scfa-cs-replay
+  BASE_URL: MudBlazor-Project-Template
 
+# For more information: https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#on
 on:
   workflow_dispatch:
   workflow_call:
   push:
     branches: [deploy/gh-pages]
 
+# For more information: https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#permissions
 permissions:
   contents: write
 
@@ -47,17 +49,18 @@ jobs:
           path: ${{ENV.PUBLISH_DIR}}
           retention-days: 1
 
-      # changes the base-tag in index.html from '/' to 'scfa-cs-replay' to match GitHub Pages repository subdirectory
-      - name: Change base-tag in index.html from / to scfa-cs-replay
+      # Required to match GitHub Pages repository subdirectory
+      - name: Update base-tag in index.html
+        if: (env.BASE_URL != '') && (env.BASE_URL != null)
         working-directory: ${{env.PUBLISH_DIR}}
         run: sed -i 's/<base href="\/" \/>/<base href="\/${{env.BASE_URL}}\/" \/>/g' index.html
 
-      # copy index.html to 404.html to serve the same file when a file is not found
+      # Copy index.html to 404.html to serve the same file when a file is not found
       - name: copy index.html to 404.html
         working-directory: ${{env.PUBLISH_DIR}}
         run: cp index.html 404.html
 
-      # add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. (Allow files and folders starting with an underscore)
+      # Add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. (Allow files and folders starting with an underscore)
       - name: Add .nojekyll file
         working-directory: ${{env.PUBLISH_DIR}}
         run: touch .nojekyll
@@ -69,7 +72,7 @@ jobs:
           path: ${{ENV.PUBLISH_DIR}}
           retention-days: 1
 
-      # publishes wwwroot directory to GitHub Pages
+      # Publishes wwwroot directory to GitHub Pages
       - name: Commit wwwroot to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
