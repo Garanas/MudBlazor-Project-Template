@@ -1,1 +1,2 @@
-# MudBlazorProject
+# GitHub template for Blazor
+
