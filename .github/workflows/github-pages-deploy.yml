@@ -51,7 +51,7 @@ jobs:
 
       # Required to match GitHub Pages repository subdirectory
       - name: Update base-tag in index.html
-        if: (env.BASE_URL != '') && (env.BASE_URL != null)
+        if: (env.BASE_URL != '')
         working-directory: ${{env.PUBLISH_DIR}}
         run: sed -i 's/<base href="\/" \/>/<base href="\/${{env.BASE_URL}}\/" \/>/g' index.html
 
