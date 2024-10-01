@@ -11,6 +11,9 @@ on:
   push:
     branches: [deploy/gh-pages]
 
+permissions:
+  contents: write
+
 jobs:
   deploy-to-github-pages:
     runs-on: ubuntu-latest
